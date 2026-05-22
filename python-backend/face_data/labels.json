@@ -1,0 +1,20 @@
+{
+  "label_map": {
+    "0": "12",
+    "1": "27",
+    "2": "ADMIN01",
+    "3": "chpvlate",
+    "4": "ritgdgu2023",
+    "5": "riya34",
+    "6": "TEST01"
+  },
+  "student_names": {
+    "12": "Ritika",
+    "27": "Riya",
+    "ADMIN01": "Admin User",
+    "chpvlate": "chpvlate",
+    "ritgdgu2023": "Ritika",
+    "riya34": "riya",
+    "TEST01": "Test User"
+  }
+}

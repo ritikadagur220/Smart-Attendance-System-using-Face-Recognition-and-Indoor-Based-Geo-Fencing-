@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart BLE Attendance System - Real-time Dashboard for Teachers">
+    <title>Dashboard — Smart Attendance</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+</head>
+<body>
+
+    <div class="dashboard" id="dashboardApp">
+
+        
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="brand-icon">📡</div>
+                <div>
+                    <h2>Smart Attendance</h2>
+                    <span>BLE Proximity System</span>
+                </div>
+            </div>
+            <div class="navbar-actions">
+                <div class="live-indicator">
+                    <span class="pulse-dot green"></span>
+                    LIVE
+                </div>
+                <div class="navbar-user">
+                    👤 <span id="userEmail">Teacher</span>
+                </div>
+                <button class="btn-logout" id="logoutBtn" onclick="handleLogout()">Sign Out</button>
+            </div>
+        </nav>
+
+        
+        <main class="main-content">
+
+            
+            <div class="tab-nav" id="tabNav">
+                <button class="tab-btn active" data-tab="attendance" onclick="switchTab('attendance')">
+                    📊 Live Attendance
+                </button>
+                <button class="tab-btn" data-tab="students" onclick="switchTab('students')">
+                    👥 Students
+                </button>
+                <button class="tab-btn" data-tab="beacons" onclick="switchTab('beacons')">
+                    📡 Beacons
+                </button>
+                <button class="tab-btn" data-tab="face" onclick="switchTab('face')">
+                    📸 Face Attendance
+                </button>
+            </div>
+
+            
+            <div class="tab-content active" id="tab-attendance">
+
+                
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="statPresent">0</div>
+                        <div class="stat-label">Currently Present</div>
+                    </div>
+                    <div class="stat-card amber">
+                        <div class="stat-icon">🚪</div>
+                        <div class="stat-value" id="statExited">0</div>
+                        <div class="stat-label">Exited Today</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon">📡</div>
+                        <div class="stat-value" id="statBeacons">0</div>
+                        <div class="stat-label">Active Beacons</div>
+                    </div>
+                </div>
+
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Today's Attendance Log</h3>
+                        <div class="live-indicator">
+                            <span class="pulse-dot green"></span>
+                            Real-time
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="data-table" id="attendanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Status</th>
+                                    <th>Entry Time</th>
+                                    <th>Exit Time</th>
+                                    <th>Classroom</th>
+                                    <th>RSSI (dBm)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceBody">
+                                
+                            </tbody>
+                        </table>
+                        <div class="empty-state" id="attendanceEmpty">
+                            <div class="icon">📋</div>
+                            <p>No attendance records yet today.<br>Records will appear here in real-time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="tab-content" id="tab-students">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>👥 Student Management</h3>
+                    </div>
+
+                    
+                    <div class="form-inline">
+                        <input type="text" id="studentName" placeholder="Student Name" required>
+                        <input type="email" id="studentEmail" placeholder="Email Address" required>
+                        <input type="text" id="studentDeviceId" placeholder="Device ID (MAC)" required>
+                        <button class="btn-action add" onclick="addStudent()">+ Add Student</button>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Device ID</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsBody">
+                                
+                            </tbody>
+                        </table>
+                        <div class="empty-state" id="studentsEmpty">
+                            <div class="icon">👥</div>
+                            <p>No students registered yet.<br>Add students using the form above.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="tab-content" id="tab-beacons">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📡 Beacon Management</h3>
+                    </div>
+
+                    
+                    <div class="form-inline">
+                        <input type="text" id="beaconName" placeholder="Device Name" value="ER-BLEV2.3-26D0008" readonly>
+                        <input type="text" id="beaconClassroom" placeholder="Classroom (e.g., Room-101)" required>
+                        <button class="btn-action add" onclick="addBeacon()">+ Add Beacon</button>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Device Name</th>
+                                    <th>Classroom</th>
+                                    <th>RSSI Present</th>
+                                    <th>RSSI Exit</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="beaconsBody">
+                                
+                            </tbody>
+                        </table>
+                        <div class="empty-state" id="beaconsEmpty">
+                            <div class="icon">📡</div>
+                            <p>No beacons registered yet.<br>Add a beacon using the form above.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="tab-content" id="tab-face">
+                
+                <div class="stats-grid" style="margin-bottom:24px">
+                    <div class="stat-card green" style="cursor:pointer" onclick="startFaceVerify()">
+                        <div class="stat-icon">📸</div>
+                        <div class="stat-value" style="font-size:20px">Verify</div>
+                        <div class="stat-label">Take Attendance via Face</div>
+                    </div>
+                    <div class="stat-card blue" style="cursor:pointer" onclick="startFaceRegister()">
+                        <div class="stat-icon">🆔</div>
+                        <div class="stat-value" style="font-size:20px">Register</div>
+                        <div class="stat-label">Register Student Face</div>
+                    </div>
+                    <div class="stat-card purple" style="cursor:pointer" onclick="trainFaceModel()">
+                        <div class="stat-icon">🧠</div>
+                        <div class="stat-value" style="font-size:20px">Train</div>
+                        <div class="stat-label">Train Recognition Model</div>
+                    </div>
+                    <div class="stat-card amber">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value" id="faceStatusCount">--</div>
+                        <div class="stat-label">Registered Faces</div>
+                    </div>
+                </div>
+
+                
+                <div class="card" id="facePanel" style="display:none">
+                    <div class="card-header">
+                        <h3 id="facePanelTitle">📸 Face Verification</h3>
+                        <button class="btn-action delete" onclick="closeFacePanel()">Close</button>
+                    </div>
+                    <div class="card-body padded">
+                        
+                        <div id="faceRegForm" style="display:none; margin-bottom:20px">
+                            <div class="form-inline" style="border:none; padding:0">
+                                <input type="text" id="faceStudentId" placeholder="Student ID (e.g., STU001)">
+                                <input type="text" id="faceStudentName" placeholder="Student Name">
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start">
+                            
+                            <div style="flex:1; min-width:320px">
+                                <video id="faceVideo" autoplay playsinline style="width:100%; border-radius:12px; background:#111827; max-height:400px"></video>
+                                <canvas id="faceCanvas" style="display:none"></canvas>
+                                <div style="display:flex; gap:12px; margin-top:16px">
+                                    <button class="btn-action add" id="faceCaptureBtn" onclick="captureAndProcess()" style="flex:1; padding:14px">
+                                        📸 Capture & Verify
+                                    </button>
+                                </div>
+                            </div>
+
+                            
+                            <div style="flex:1; min-width:280px">
+                                <div id="faceResult" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); border-radius:12px; padding:24px; min-height:200px">
+                                    <p style="color:var(--text-muted); text-align:center">Point your camera at a face and click Capture</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📸 Face Attendance Log</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Status</th>
+                                    <th>Time</th>
+                                    <th>Confidence</th>
+                                    <th>Method</th>
+                                </tr>
+                            </thead>
+                            <tbody id="faceAttendanceBody">
+                            </tbody>
+                        </table>
+                        <div class="empty-state" id="faceAttendanceEmpty">
+                            <div class="icon">📸</div>
+                            <p>No face attendance records yet.<br>Use the camera above to take attendance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    
+    <div class="toast-container" id="toastContainer"></div>
+
+    
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>

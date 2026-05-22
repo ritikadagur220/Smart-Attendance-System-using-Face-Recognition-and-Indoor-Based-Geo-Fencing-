@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="#0A0E1A">
+
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📡"
+        android:textSize="56sp"
+        android:layout_marginBottom="16dp" />
+
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Smart Attendance"
+        android:textSize="24sp"
+        android:textColor="#F1F5F9"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp" />
+
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BLE-Based Attendance System"
+        android:textSize="14sp"
+        android:textColor="#64748B"
+        android:layout_marginBottom="40dp" />
+
+    
+    <TextView
+        android:id="@+id/textError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#EF4444"
+        android:textSize="13sp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
+
+    
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Email Address"
+        android:inputType="textEmailAddress"
+        android:textColor="#F1F5F9"
+        android:textColorHint="#64748B"
+        android:background="@android:color/transparent"
+        android:padding="12dp"
+        android:textSize="15sp"
+        android:layout_marginBottom="16dp"
+        android:autofillHints="emailAddress" />
+
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#1F2937"
+        android:layout_marginBottom="16dp" />
+
+    
+    <EditText
+        android:id="@+id/editPassword"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="#F1F5F9"
+        android:textColorHint="#64748B"
+        android:background="@android:color/transparent"
+        android:padding="12dp"
+        android:textSize="15sp"
+        android:layout_marginBottom="32dp"
+        android:autofillHints="password" />
+
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#1F2937"
+        android:layout_marginBottom="32dp" />
+
+    
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Sign In"
+        android:textSize="15sp"
+        android:textColor="#FFFFFF"
+        android:background="#3B82F6"
+        android:textAllCaps="false"
+        android:textStyle="bold" />
+
+</LinearLayout>

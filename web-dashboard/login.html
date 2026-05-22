@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart BLE Attendance System - Teacher Login Portal">
+    <title>Login — Smart Attendance</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            
+            <div class="logo">
+                <div class="logo-icon">📡</div>
+                <h1>Smart Attendance</h1>
+                <p class="subtitle">BLE-Based Attendance System — Teacher Portal</p>
+            </div>
+
+            
+            <div class="login-error" id="loginError"></div>
+
+            
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Username</label>
+                    <input 
+                        type="text" 
+                        id="loginEmail" 
+                        placeholder="admin or test" 
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input 
+                        type="password" 
+                        id="loginPassword" 
+                        placeholder="Enter your password" 
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    Sign In
+                </button>
+            </form>
+
+            <p style="text-align:center; margin-top:20px; color:var(--text-muted); font-size:12px;">
+                Admin: admin / RitGdgu2025<br>
+                Test: test / test2025
+            </p>
+        </div>
+    </div>
+
+    
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        /**
+         * Handle login form submission.
+         * Uses Firebase Auth for production, falls back to demo mode.
+         */
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('loginError');
+            
+            // Reset error
+            errorDiv.style.display = 'none';
+            btn.textContent = 'Signing in...';
+            btn.disabled = true;
+            
+            try {
+                if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                    // Firebase Auth login
+                    await firebase.auth().signInWithEmailAndPassword(email, password);
+                    window.location.href = 'index.html';
+                } else {
+                    if ((email === 'admin' && password === 'RitGdgu2025') || (email === 'test' && password === 'test2025')) {
+                        sessionStorage.setItem('demoUser', JSON.stringify({
+                            email: email,
+                            displayName: email,
+                            uid: 'local-' + Date.now()
+                        }));
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                        window.location.href = 'index.html';
+                    } else {
+                        throw new Error('Invalid credentials');
+                    }
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message || 'Login failed. Please try again.';
+                errorDiv.style.display = 'block';
+                btn.textContent = 'Sign In';
+                btn.disabled = false;
+            }
+        }
+        
+        // Check if already logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                firebase.auth().onAuthStateChanged(user => {
+                    if (user) {
+                        window.location.href = 'index.html';
+                    }
+                });
+            } else if (sessionStorage.getItem('demoUser')) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+
+</body>
+</html>
