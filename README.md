@@ -1,0 +1,2 @@
+# Smart-Attendance-System-using-Face-Recognition-and-Indoor-Based-Geo-Fencing-
+The Smart Attendance System using Face Recognition and Indoor Based Geo-Fencing is an intelligent attendance management solution designed to automate and secure the traditional attendance process. The system combines Artificial Intelligence (AI), Face Recognition Technology, and Indoor Geo-Fencing to ensure accurate and fraud-free attendance markin
